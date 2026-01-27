@@ -1,4 +1,9 @@
 package com.example.demo.course;
 
-public class TopicRepository {
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface TopicRepository extends JpaRepository<Topic, String> {
+
+    List<Topic> findByCourseId(String courseId);
 }

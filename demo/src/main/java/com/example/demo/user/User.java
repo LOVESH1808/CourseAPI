@@ -2,12 +2,15 @@ package com.example.demo.user;
 
 
 import jakarta.persistence.*;
-import org.springframework.data.annotation.Id;
+import lombok.AllArgsConstructor;
+import org.jspecify.annotations.Nullable;
 
 import java.time.Instant;
 
 @Entity
 @Table(name = "users")
+@AllArgsConstructor
+
 public class User {
 
     @Id
@@ -22,6 +25,11 @@ public class User {
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt = Instant.now();
+
+    public User(String email, String password) {
+        this.email = email;
+        this.passwordHash = password;
+    }
 
     public Long getId() {
         return id;
