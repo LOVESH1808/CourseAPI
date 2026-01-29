@@ -35,9 +35,7 @@ public class JWTTokenProvider {
 
     public Long getUserIdFromToken(String token) {
         Object value = parseClaims(token).get("userId");
-        return value instanceof Integer
-                ? ((Integer) value).longValue()
-                : (Long) value;
+        return value instanceof Integer ? ((Integer) value).longValue() : (Long) value;
     }
 
     public boolean validateToken(String token) {
@@ -59,5 +57,10 @@ public class JWTTokenProvider {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    public String getUsername(String token) {
+        Claims claims = parseClaims(token);
+        return claims.getSubject();
     }
 }

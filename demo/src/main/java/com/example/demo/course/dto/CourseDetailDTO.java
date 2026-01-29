@@ -1,7 +1,15 @@
 package com.example.demo.course.dto;
 
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.List;
+import java.util.Set;
+
+@AllArgsConstructor
+@Getter
+@Setter
 public class CourseDetailDTO {
 
     private String id;
@@ -9,20 +17,10 @@ public class CourseDetailDTO {
     private String description;
     private List<TopicDTO> topics;
 
-    public CourseDetailDTO(
-            String id,
-            String title,
-            String description,
-            List<TopicDTO> topics) {
 
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.topics = topics;
-    }
-
+    // getters and setters
     public String getId() { return id; }
     public String getTitle() { return title; }
     public String getDescription() { return description; }
-    public List<TopicDTO> getTopics() { return topics; }
+    public List <TopicDTO> getTopics() { return topics; }
 }

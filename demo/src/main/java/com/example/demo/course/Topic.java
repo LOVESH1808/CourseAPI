@@ -1,20 +1,28 @@
 package com.example.demo.course;
 
 import jakarta.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+@Getter
+@Setter
 @Entity
 @Table(name = "topics")
 public class Topic {
 
     @Id
+    @Column(nullable = false, updatable = false)
     private String id;
 
     @Column(nullable = false)
     private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
@@ -23,21 +31,7 @@ public class Topic {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<Subtopic> subtopics = new ArrayList<>();
+    private Set<Subtopic> subtopics = new HashSet<>();
 
-    public String getId() {
-        return id;
-    }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public Course getCourse() {
-        return course;
-    }
-
-    public List<Subtopic> getSubtopics() {
-        return subtopics;
-    }
 }

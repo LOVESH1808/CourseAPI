@@ -1,12 +1,17 @@
 package com.example.demo.enrollment;
 
-import java.util.List;
-import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
+import java.util.Optional;
 
-    Optional<Enrollment> findByUserIdAndCourseId(Long userId, String courseId);
+public interface EnrollmentRepository
+        extends JpaRepository<Enrollment, Long> {
 
-    List<Enrollment> findByUserId(Long userId);
+    Optional<Enrollment> findByUserIdAndCourseId(
+            Long userId,
+            String courseId);
+
+    boolean existsByUserIdAndCourseId(
+            Long userId,
+            String courseId);
 }

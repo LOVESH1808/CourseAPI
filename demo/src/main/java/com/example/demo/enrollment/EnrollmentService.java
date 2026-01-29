@@ -1,4 +1,7 @@
 package com.example.demo.enrollment;
 
-public class EnrollmentService {
+import com.example.demo.enrollment.dto.EnrollmentResponseDTO;
+
+public interface EnrollmentService {
+    EnrollmentResponseDTO enroll(String userEmail, String courseId);
 }

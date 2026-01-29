@@ -1,16 +1,21 @@
 package com.example.demo.progress;
 
+import com.example.demo.course.Course;
+import com.example.demo.course.Subtopic;
+import com.example.demo.user.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import java.util.List;
 import java.util.Optional;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SubTopicProgressRepository
         extends JpaRepository<SubTopicProgress, Long> {
 
-    Optional<SubTopicProgress> findByUserIdAndSubtopicId(
-            Long userId,
-            String subtopicId
-    );
+    Optional<SubTopicProgress> findByUserAndSubtopic(
+            User user,
+            Subtopic subtopic);
 
-    List<SubTopicProgress> findByUserId(Long userId);
+    List<SubTopicProgress> findAllByUserAndCourse(
+            User user,
+            Course course);
 }

@@ -69,8 +69,7 @@ public class AuthController {
                         new RuntimeException("Invalid credentials"));
 
         if (!passwordEncoder.matches(
-                request.getPassword(), user.getPasswordHash())) {
-
+                request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid credentials");
         }
 

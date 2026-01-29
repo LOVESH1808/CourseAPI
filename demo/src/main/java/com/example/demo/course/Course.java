@@ -1,9 +1,16 @@
 package com.example.demo.course;
 
 import jakarta.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+@Getter
+@Setter
 @Entity
 @Table(name = "courses")
 public class Course {
@@ -22,21 +29,12 @@ public class Course {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<Topic> topics = new ArrayList<>();
+    private Set<Topic> topics = new HashSet<>();
 
-    public String getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public List<Topic> getTopics() {
-        return topics;
+    public int getTotalSubtopicCount() {
+        if (topics == null) return 0;
+        return topics.stream()
+                .mapToInt(topic -> topic.getSubtopics() != null ? topic.getSubtopics().size() : 0)
+                .sum();
     }
 }

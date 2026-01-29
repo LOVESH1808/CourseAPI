@@ -4,8 +4,11 @@ package com.example.demo.enrollment;
 import com.example.demo.course.Course;
 import com.example.demo.user.User;
 import jakarta.persistence.*;
+import lombok.Setter;
+
 import java.time.Instant;
 
+@Setter
 @Entity
 @Table(
         name = "enrollments",
@@ -30,19 +33,7 @@ public class Enrollment {
     @Column(name = "enrolled_at", nullable = false)
     private Instant enrolledAt = Instant.now();
 
-    public Long getId() {
-        return id;
-    }
+    @OneToMany(mappedBy = "enrollment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<CompletedSubtopic> completedSubtopics = new HashSet<>();
 
-    public User getUser() {
-        return user;
-    }
-
-    public Course getCourse() {
-        return course;
-    }
-
-    public Instant getEnrolledAt() {
-        return enrolledAt;
-    }
 }

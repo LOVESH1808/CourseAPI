@@ -1,5 +1,11 @@
 package com.example.demo.course.dto;
 
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class CourseSummaryDTO {
 
     private String id;
