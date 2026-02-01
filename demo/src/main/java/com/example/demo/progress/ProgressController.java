@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/subtopics")
 public class ProgressController {
 
     private final ProgressService progressService;
@@ -17,7 +17,7 @@ public class ProgressController {
         this.progressService = progressService;
     }
 
-    @PostMapping("/subtopics/{subtopicId}/complete")
+    @PostMapping("/{subtopicId}/complete")
     public SubtopicProgressResponseDTO completeSubtopic(
             @PathVariable String subtopicId,
             @AuthenticationPrincipal UserDetails user) {
@@ -26,12 +26,12 @@ public class ProgressController {
                 user.getUsername(), subtopicId);
     }
 
-    @GetMapping("/enrollments/{enrollmentId}/progress")
-    public EnrollmentProgressResponseDTO getProgress(
-            @PathVariable Long enrollmentId,
-            @AuthenticationPrincipal UserDetails user) {
-
-        return progressService.getProgress(
-                user.getUsername(), enrollmentId);
-    }
+//    @GetMapping("/enrollments/{enrollmentId}/progress")
+//    public EnrollmentProgressResponseDTO getProgress(
+//            @PathVariable Long enrollmentId,
+//            @AuthenticationPrincipal UserDetails user) {
+//
+//        return progressService.getProgress(
+//                user.getUsername(), enrollmentId);
+//    }
 }

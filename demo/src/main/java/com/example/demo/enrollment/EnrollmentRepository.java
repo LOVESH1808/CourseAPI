@@ -14,4 +14,9 @@ public interface EnrollmentRepository
     boolean existsByUserIdAndCourseId(
             Long userId,
             String courseId);
+
+    Optional<Enrollment> findByIdAndUserId(
+            Long enrollmentId,
+            Long userId
+    );
 }

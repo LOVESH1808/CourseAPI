@@ -2,6 +2,8 @@ package com.example.demo.progress;
 
 import com.example.demo.course.Subtopic;
 import com.example.demo.course.SubTopicRepository;
+import com.example.demo.enrollment.CompletedSubtopic;
+import com.example.demo.enrollment.CompletedSubtopicRepository;
 import com.example.demo.enrollment.Enrollment;
 import com.example.demo.enrollment.EnrollmentRepository;
 import com.example.demo.enrollment.dto.EnrollmentProgressResponseDTO;
@@ -12,65 +14,57 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
-
 @Service
 public class ProgressServiceImpl implements ProgressService {
 
     private final UserRepository userRepository;
     private final SubTopicRepository subtopicRepository;
     private final EnrollmentRepository enrollmentRepository;
-    private final SubTopicProgressRepository progressRepository;
+    private final CompletedSubtopicRepository completedSubtopicRepository;
 
     public ProgressServiceImpl(
             UserRepository userRepository,
             SubTopicRepository subtopicRepository,
             EnrollmentRepository enrollmentRepository,
-            SubTopicProgressRepository progressRepository) {
-
+            CompletedSubtopicRepository completedSubtopicRepository
+    ) {
         this.userRepository = userRepository;
         this.subtopicRepository = subtopicRepository;
         this.enrollmentRepository = enrollmentRepository;
-        this.progressRepository = progressRepository;
+        this.completedSubtopicRepository = completedSubtopicRepository;
     }
 
     @Override
-    public SubtopicProgressResponseDTO completeSubtopic(
-            String userEmail,
-            String subtopicId) {
-
+    public SubtopicProgressResponseDTO completeSubtopic(String userEmail, String subtopicId) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Subtopic subtopic = subtopicRepository.findById(subtopicId)
                 .orElseThrow(() -> new RuntimeException("Subtopic not found"));
 
-        Enrollment enrollment =
-                enrollmentRepository.findByUserIdAndCourseId(
-                        user.getId(),
-                        subtopic.getTopic().getCourse().getId()
-                ).orElseThrow(() ->
-                        new RuntimeException("User not enrolled in course"));
-        return progressRepository
-                .findByUserAndSubtopic(user, subtopic)
-                .map(SubtopicProgressResponseDTO::from)
-                .orElseGet(() -> {
-                    SubTopicProgress progress = new SubTopicProgress();
-                    progress.setUser(user);
-                    progress.setSubtopic(subtopic);
-                    progress.setCompleted(true);
-                    progress.setCompletedAt(Instant.now());
+        Enrollment enrollment = enrollmentRepository
+                .findByUserIdAndCourseId(user.getId(), subtopic.getTopic().getCourse().getId())
+                .orElseThrow(() -> new RuntimeException("User not enrolled in course"));
 
-                    progressRepository.save(progress);
-                    return SubtopicProgressResponseDTO.from(progress);
+        CompletedSubtopic completedSubtopic = completedSubtopicRepository
+                .findByEnrollmentIdAndSubtopicId(enrollment.getId(), subtopicId)
+                .orElseGet(() -> {
+                    CompletedSubtopic cs = new CompletedSubtopic();
+                    cs.setEnrollment(enrollment);
+                    cs.setSubtopic(subtopic);
+                    cs.setCompletedAt(Instant.now());
+                    return completedSubtopicRepository.save(cs);
                 });
 
+        return new SubtopicProgressResponseDTO(
+                completedSubtopic.getSubtopic().getId(),
+                true,
+                completedSubtopic.getCompletedAt()
+        );
     }
 
     @Override
-    public EnrollmentProgressResponseDTO getProgress(
-            String userEmail,
-            Long enrollmentId) {
-
+    public EnrollmentProgressResponseDTO getProgress(String userEmail, Long enrollmentId) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -81,13 +75,10 @@ public class ProgressServiceImpl implements ProgressService {
             throw new RuntimeException("Forbidden");
         }
 
-        int totalSubtopics =
-                enrollment.getCourse().getTotalSubtopicCount();
+        int totalSubtopics = enrollment.getCourse().getTotalSubtopicCount();
 
-        List<SubTopicProgress> completed =
-                progressRepository.findAllByUserAndCourse(
-                        user,
-                        enrollment.getCourse());
+        List<CompletedSubtopic> completed = completedSubtopicRepository
+                .findAllByEnrollmentId(enrollment.getId());
 
         return EnrollmentProgressResponseDTO.from(
                 enrollment,

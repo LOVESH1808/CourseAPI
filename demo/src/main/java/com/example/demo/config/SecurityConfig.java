@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -48,14 +49,20 @@ public class SecurityConfig {
                 .exceptionHandling(ex ->
                         ex.authenticationEntryPoint(entryPoint))
                 .authorizeHttpRequests(auth -> auth
+                        // 🔓 PUBLIC
+                        .requestMatchers(HttpMethod.GET, "/api/courses/**").permitAll()
                         .requestMatchers(
-                                "/api/auth/register",
-                                "/api/auth/login",
-                                "/api/courses/**",
-                                "/api/search/**",
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**"
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**"
                         ).permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/search/**").permitAll()
+
+                        // 🔐 PROTECTED
+                        .requestMatchers(HttpMethod.POST, "/api/courses/**").authenticated()
+                        .requestMatchers("/api/subtopics/**").authenticated()
+                        .requestMatchers("/api/enrollments/**").authenticated()
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(

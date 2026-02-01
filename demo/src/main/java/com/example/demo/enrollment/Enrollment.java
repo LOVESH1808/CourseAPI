@@ -4,12 +4,14 @@ package com.example.demo.enrollment;
 import com.example.demo.course.Course;
 import com.example.demo.user.User;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.Setter;
-
+import java.util.*;
 import java.time.Instant;
 
 @Setter
 @Entity
+@Getter
 @Table(
         name = "enrollments",
         uniqueConstraints = @UniqueConstraint(

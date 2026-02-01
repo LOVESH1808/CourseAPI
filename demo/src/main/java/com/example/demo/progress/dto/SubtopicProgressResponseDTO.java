@@ -1,16 +1,20 @@
 package com.example.demo.progress.dto;
 
 import com.example.demo.progress.SubTopicProgress;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 
+@Getter
+@Setter
 public class SubtopicProgressResponseDTO {
 
     private final String subtopicId;
     private final boolean completed;
     private final Instant completedAt;
 
-    private SubtopicProgressResponseDTO(
+    public SubtopicProgressResponseDTO(
             String subtopicId,
             boolean completed,
             Instant completedAt) {
@@ -30,7 +34,4 @@ public class SubtopicProgressResponseDTO {
         );
     }
 
-    public String getSubtopicId() { return subtopicId; }
-    public boolean isCompleted() { return completed; }
-    public Instant getCompletedAt() { return completedAt; }
 }
