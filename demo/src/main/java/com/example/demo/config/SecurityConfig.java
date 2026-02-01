@@ -30,7 +30,7 @@ import org.springframework.context.annotation.Configuration;
 public class SecurityConfig {
     @Bean
     public JWTTokenProvider JWTTokenProvider(
-            @Value("${jwt.secret}") String secret,
+            @Value("${JWT_SECRET}") String secret,
             @Value("${jwt.expiration-ms}") long expiration) {
 
         return new JWTTokenProvider(secret, expiration);
