@@ -32,15 +32,15 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 public class SecurityConfig {
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowedOrigins(List.of(
-                "http://localhost:3000",
-                "http://localhost:5173",
-                "http://localhost:8080",
-                "https://*.up.railway.app"
+                "http://localhost:*",
+                "https://*.up.railway.app",
+                "http://*.up.railway.app"
         ));
 
         config.setAllowedMethods(List.of(
