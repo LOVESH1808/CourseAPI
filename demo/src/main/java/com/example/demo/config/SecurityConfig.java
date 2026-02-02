@@ -37,10 +37,10 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of(
+        config.setAllowedOriginPatterns(List.of(
                 "http://localhost:*",
-                "https://*.up.railway.app",
-                "http://*.up.railway.app"
+                "http://*.up.railway.app",
+                "https://*.up.railway.app"
         ));
 
         config.setAllowedMethods(List.of(
@@ -80,6 +80,7 @@ public class SecurityConfig {
                         ex.authenticationEntryPoint(entryPoint))
                 .authorizeHttpRequests(auth -> auth
                         // 🔓 PUBLIC
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/courses/**").permitAll()
                         .requestMatchers(
                                 "/swagger-ui/**",
